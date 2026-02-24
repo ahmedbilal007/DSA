@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+// Singly Linked List
 struct Node{
     int val;
     Node* next = NULL;
@@ -216,8 +217,6 @@ void print_list(LinkedList l1){
 //     }
 
 // };
-
-
 
 int main(){
     // List list;
