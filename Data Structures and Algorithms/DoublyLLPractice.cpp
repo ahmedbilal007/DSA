@@ -89,12 +89,27 @@ void print(DLinkedList l){
 	Node* temp = l.head;
 	while (temp != NULL)
 	{
-		cout << temp->data<< "<=>";
+		cout << temp->data<< "<->";
 		temp = temp->next;
 	}
-	cout << "NULL";
+	cout << "NULL" << endl;
 }
 
+void reverse_list(DLinkedList& l){
+	if (l.head == NULL || l.head->next == NULL)
+		return;
+	Node* prev = NULL;
+	Node* cur = l.head;
+	Node* next = NULL;
+	while (cur != NULL){
+		next = cur->next;
+		cur->next = prev;
+		cur->prev = next;
+		prev = cur;
+		cur = next;
+	}
+	l.head = prev;
+}
 
 int main(){
 	DLinkedList listt;
@@ -108,6 +123,8 @@ int main(){
 //	pop_front(listt);
 //	pop_back(listt);
 	insertt(listt, 9, 7);
+	print(listt);
+	reverse_list(listt);
 	print(listt);
 
 	return 0;
