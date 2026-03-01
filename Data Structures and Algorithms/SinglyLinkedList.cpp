@@ -175,6 +175,36 @@ public:
 		}
 	}
 
+	Node* swap_pairs(){
+		// Time Complexity---> O(n)
+		// Space Complexity---> O(1)
+
+		if (head == NULL || head->next == NULL)
+			return head;
+		Node* first = head;
+		Node* sec = first->next;
+		Node* prev = NULL;
+		while (first != NULL && sec != NULL){
+			Node* third = sec->next;
+			sec->next = first;
+			first->next = third;
+			if (prev != NULL)
+				prev->next = sec;
+			else
+				head = sec;
+			prev = first;
+			first = third;
+			if (third != NULL)
+				sec = third->next;
+			else
+				sec = NULL;
+		}
+		return head;
+	}
+
+
+
+
 	void print_list(){
 		Node* temp = head;
 		while(temp != NULL){
@@ -227,18 +257,24 @@ int main(){
 	list1.push_back(2);
 	list1.push_back(6);
 	list1.push_back(8);
+	list1.push_back(9);
+	list1.push_back(10);
 
-	cout << list1.reverse()->val << endl;
+//	cout << list1.reverse()->val << endl;
+//	list1.print_list();
+//
+//	cout << list1.recursive_reverse(NULL, list1.head)->val << endl;
+//	list1.print_list();
+
+//	list2.push_back(1);
+//	list2.push_back(6);
+//	list2.push_back(7);
+//
+//	cout << "After merging the two lists: " << merge_sorted(list1.head, list2.head, list3)->val << endl;
+//	list3.print_list();
+	cout << list1.swap_pairs()->val << endl;
 	list1.print_list();
 
-	cout << list1.recursive_reverse(NULL, list1.head)->val << endl;
-	list1.print_list();
 
-	list2.push_back(1);
-	list2.push_back(6);
-	list2.push_back(7);
-
-	cout << "After merging the two lists: " << merge_sorted(list1.head, list2.head, list3)->val << endl;
-	list3.print_list();
     return 0;
 }
