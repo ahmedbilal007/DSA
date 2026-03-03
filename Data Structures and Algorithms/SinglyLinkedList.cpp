@@ -125,6 +125,9 @@ public:
     }
 
     Node* middleOfList(){
+		// Slow moves with 1x per iteration while fast moves with 2x per iteration.
+		// So, by the time fast reaches end of the list, slow would be at the middle of the list.
+
 		Node* fast = head;
 		Node* slow = head;
 		while(fast!=NULL && fast->next!=NULL){
@@ -135,6 +138,7 @@ public:
     }
 
     bool detectCycle(){
+		// If any cycle exists in the list, then there exists a point where slow and fast are at the same position.
 		Node* slow = head;
 		Node* fast = head;
 		while (fast != NULL && fast->next != NULL){
@@ -201,9 +205,6 @@ public:
 		}
 		return head;
 	}
-
-
-
 
 	void print_list(){
 		Node* temp = head;

@@ -128,6 +128,16 @@ void reverse_list(DLinkedList& l){
 	l.head = prev;
 }
 
+void recursive_reverse(DLinkedList& l, Node* prev, Node* cur){
+	if (cur == NULL){
+		l.head = prev;
+		return;
+	}
+	Node* nextt = cur->next;
+	cur->next = prev;
+	cur->prev = nextt;
+	recursive_reverse(l, cur, nextt);
+}
 int main(){
 	DLinkedList listt;
 	push_front(listt, 1);
@@ -141,6 +151,7 @@ int main(){
 //	deleteV(listt,6);
 	print_List(listt);
 	reverse_list(listt);
+	recursive_reverse(listt, NULL, listt.head);
 	print_List(listt);
 	return 0;
 }
