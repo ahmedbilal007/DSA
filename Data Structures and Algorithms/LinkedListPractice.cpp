@@ -1,74 +1,87 @@
 #include <iostream>
 using namespace std;
 
-// Singly Linked List
 struct Node{
-    int val;
-    Node* next = NULL;
+    int data;
+    Node* next;
 };
+
 struct LinkedList{
     Node* head = NULL;
     Node* tail = NULL;
 };
 
-void push_front(LinkedList& l1, int value){
+void push_front(LinkedList& l, int val){
     Node* newNode = new Node();
-    newNode->val = value;
-    if (l1.head == NULL){
-        l1.head = l1.tail = newNode;
-        return;
+    newNode->data = val;
+    if (l.head == NULL){
+        l.head = l.tail = newNode;
     } else {
-        newNode->next = l1.head;
-        l1.head = newNode;
-    }
-};
-
-void push_back(LinkedList& l1, int value){
-    Node* newNode = new Node();
-    newNode->val = value;
-    if (l1.head == NULL){
-        l1.head = l1.tail = newNode;
-        return;
-    } else {
-        l1.tail->next = newNode;
-        l1.tail = newNode;
+        newNode->next = l.head;
+        l.head = newNode;
     }
 }
 
-void pop_front(LinkedList& l1){
-    Node* temp = l1.head;
-    if (l1.head == NULL){
-        cout << "Linked list is empty.\n";
-        return;
-    } else {
-        l1.head = l1.head->next;
-        temp->next = NULL;
-        delete temp;
+void push_back(LinkedList& l, int val){
+    Node* newNode = new Node();
+    newNode->data = val;
+    if (l.head == NULL)
+        l.head = l.tail = newNode;
+    else{
+        l.tail->next = newNode;
+        l.tail = newNode;
     }
 }
 
-void pop_back(LinkedList l1){
-    if (l1.head == NULL){
+void pop_front(LinkedList& l){
+    if (l.head == NULL){
         cout << "Linked list is empty.\n";
         return;
     }
-    Node* temp = l1.head;
-    while (temp->next != l1.tail){
+    Node* temp = l.head;
+    l.head = l.head->next;
+    delete temp;
+}
+
+void pop_back(LinkedList& l){
+     if (l.head == NULL){
+        cout << "Linked list is empty.\n";
+        return;
+    }
+    Node* temp = l.head;
+    while (temp->next != l.tail){
         temp = temp->next;
     }
     temp->next = NULL;
-    delete l1.tail;
-    l1.tail = temp;
+    delete l.tail;
+    l.tail = temp;
 }
 
-void insert(LinkedList l1, int value, int pos){
+void print(LinkedList l){
+    if (l.head == NULL){
+        cout << "Linked List is empty.\n";
+        return;
+    }
+    Node* temp = l.head;
+    while (temp != NULL){
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << "NULL\n";
+}
+
+void insert(LinkedList& l, int pos, int val){
+    if (pos < 0){
+        cout << "Invalid Position.\n";
+        return;
+    }
     if (pos == 0){
-        push_front(l1,value);
+        push_front(l, val);
         return;
     }
     Node* newNode = new Node();
-    newNode->val = value;
-    Node* temp = l1.head;
+    newNode->data = val;
+    Node* temp = l.head;
     for (int i=0; i<pos-1; i++){
         temp = temp->next;
     }
@@ -76,24 +89,170 @@ void insert(LinkedList l1, int value, int pos){
     temp->next = newNode;
 }
 
-void removeElement(LinkedList l1, int value){
-    Node* temp = l1.head;
-
-    while(temp->next->val != value){
+void deletee(LinkedList& l, int val){
+    if (l.head == NULL){
+        cout << "Linked List is empty.\n";
+        return;
+    }
+    if (l.head->data == val){
+        pop_front(l);
+        return;
+    }
+    if (l.tail->data == val){
+        pop_back(l);
+        return;
+    }
+    Node* temp = l.head;
+    Node* temp2 = NULL;
+    while (temp != NULL && temp->data != val){
+        temp2 = temp;
         temp = temp->next;
     }
-    temp->next = temp->next->next;
-}
-void print_list(LinkedList l1){
-    Node* temp = l1.head;
-    while (temp != NULL){
-        cout << temp->val << " ";
-        temp = temp->next;
+    if (temp != NULL){
+        temp2->next = temp->next;
+        temp->next = NULL;
+        delete temp;
+    } else {
+        cout << "Node not found in the list.\n";
     }
-    cout << endl;
 }
 
-Node* swap_pairs(LinkedList& l){
+Node* reverseList(LinkedList& l){
+    if (l.head == NULL || l.head->next == NULL)
+    {
+        return l.head;
+    }
+    Node* cur = l.head;
+    Node* prev = NULL;
+    while (cur != NULL){
+        Node* nextt = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = nextt;
+    }
+    l.head = prev;
+    return prev;
+}
+
+Node* recursiveReverse(LinkedList& l, Node* cur, Node* prev){
+    if (cur == NULL){
+        l.head = prev;
+        return prev;
+    }
+    Node* next = cur->next;
+    cur->next = prev;
+    return recursiveReverse(l, next, cur);
+}
+
+int findMid(LinkedList l){
+    if (l.head == NULL || l.head->next == NULL){
+        return l.head->data;
+    }
+    Node* slow = l.head;
+    Node* fast = l.head;
+    while (fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow->data;
+}
+
+bool detectCycle(LinkedList l){
+    if (l.head == NULL || l.head->next == NULL){
+        return false;
+    }
+    Node* slow = l.head;
+    Node* fast = l.head;
+    while (fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            return true;
+    }
+    return false;
+}
+
+int valueFromEnd(LinkedList& l, int n){
+    if (l.head == NULL || n < 0){
+        cout << "Either list is empty or invalid value is given.\n";
+        return -11111111;
+    }
+    Node* fast = l.head;
+    Node* slow = l.head;
+    for (int i=0; i<n; i++)
+        fast = fast->next;
+    while (fast != NULL){
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return slow->data;
+}
+
+void deleteFromEnd(LinkedList& l, int n){
+    if (l.head == NULL || n < 0){
+        cout << "Either list is empty or invalid value is given.\n";
+        return;
+    }
+    Node* fast = l.head;
+    Node* slow = l.head;
+    Node* prev = NULL;
+    for (int i=0; i<n; i++){
+        if (fast == NULL){
+            cout << "n is greater than length of the list.\n";
+            return;
+        }
+        fast = fast->next;
+    }
+    if (fast == NULL){
+        Node* temp = l.head;
+        l.head = l.head->next;
+        delete temp;
+        return;
+    }
+    while (fast != NULL){
+        prev = slow;
+        slow = slow->next;
+        fast = fast->next;
+    }
+    prev->next = slow->next;
+    slow->next = NULL;
+    delete slow;
+}
+
+bool isPalindrome(LinkedList l){
+    if (l.head == NULL || l.head->next == NULL){
+        return false;
+    }
+    Node* fast = l.head;
+    Node* slow = l.head;
+    while (fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    if (fast != NULL){
+        slow = slow->next;
+    }
+    Node* cur = slow;
+    Node* prev = NULL;
+    while (cur != NULL){
+        Node* next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    Node* first = l.head;
+    Node* second = prev;
+    while (second != NULL){
+        if (first->data != second->data)
+            return false;
+
+        first = first->next;
+        second = second->next;
+    }
+    return true;
+}
+
+Node* swapNodes(LinkedList& l){
     if (l.head == NULL || l.head->next == NULL){
         return l.head;
     }
@@ -104,240 +263,41 @@ Node* swap_pairs(LinkedList& l){
         Node* third = sec->next;
         sec->next = first;
         first->next = third;
-        if (prev != NULL)
+        if (prev != NULL){
             prev->next = sec;
-        else
+        } else {
             l.head = sec;
+        }
         prev = first;
         first = third;
-        if (third != NULL)
+        if (third != NULL){
             sec = third->next;
-        else
+        } else {
             sec = NULL;
+        }
     }
-
-    Node* temp = l.head;
     return l.head;
 }
-
-/*
-    Class Implementation of Linked List.
-*/
-
-
-//class Node
-//{
-//public:
-//    int val;
-//    Node* next;
-//
-//    Node(int val)
-//    {
-//        this->val = val;
-//        next = NULL;
-//    }
-//};
-//
-//class List
-//{
-//public:
-//    Node* head;
-//    Node* tail;
-//
-//    List()
-//    {
-//        head = tail = NULL;
-//    }
-//
-//    void print()
-//    {
-//        Node* temp = head;
-//        while (temp != NULL)
-//        {
-//            cout << temp->val << " ";
-//            temp = temp->next;
-//        }
-//        cout << endl;
-//    }
-//
-//    void push_front(int val)
-//    {
-//        Node* newNode = new Node(val);
-//        if (head == NULL)
-//        {
-//            head = tail = newNode;
-//            return;
-//        }
-//        else
-//        {
-//            newNode->next = head;
-//            head = newNode;
-//        }
-//    }
-//
-//    void push_back(int val)
-//    {
-//        Node* newNode = new Node(val);
-//        if (head==NULL)
-//        {
-//            head = tail = newNode;
-//            return;
-//        }
-//        else
-//        {
-//            tail->next = newNode;
-//            tail = newNode;
-//        }
-//    }
-//
-//    void pop_front()
-//    {
-//        if (head==NULL)
-//        {
-//            cout << "linked list is empty.";
-//            return;
-//        }
-//        Node* temp = head;
-//        head = temp->next;
-//        temp->next = NULL;
-//        delete temp;
-//    }
-//
-//    void pop_back()
-//    {
-//        if (head == NULL)
-//        {
-//            cout << "linked list is empty" << endl;
-//            return;
-//        }
-//        Node* temp = head;
-//        while (temp->next != tail)
-//        {
-//            temp = temp->next;
-//        }
-//        temp->next = NULL;
-//        delete tail;
-//        tail = temp;
-//    }
-//
-//    void insert(int val, int pos)
-//    {
-//        if (pos < 0)
-//        {
-//            cout << "invalid position\n";
-//            return;
-//        }
-//        if (pos==0)
-//        {
-//            push_front(val);
-//            return;
-//        }
-//        Node* newNode = new Node(val);
-//        Node* temp = head;
-//        for (int i=0; i<pos-1; i++)
-//        {
-//            if (temp==NULL)
-//            {
-//                cout << "invalid position\n";
-//                return;
-//            }
-//            temp = temp->next;
-//        }
-//        newNode->next = temp->next;
-//        temp->next = newNode;
-//    }
-//
-//    int search(int key)
-//    {
-//        Node* temp = head;
-//        int idx = 0;
-//        while (temp != NULL)
-//        {
-//            if (temp->val == key)
-//                return idx;
-//            temp = temp->next;
-//            idx++;
-//        }
-//        return -1;
-//    }
-//
-//    Node* reverse()
-//    {
-//        Node* prev = NULL;
-//        Node* curr = head;
-//        Node* nextN = NULL;
-//        while(curr != NULL)
-//        {
-//            nextN = curr->next;
-//            curr->next = prev;
-//            prev = curr;
-//            curr = nextN;
-//        }
-//        return prev;
-//    }
-//
-//    Node* swap_pairs(){
-//        if (head == NULL || head->next == NULL)
-//            return head;
-//        Node* first = head;
-//        Node* sec = first->next;
-//        Node* prev = NULL;
-//        while (first != NULL && sec != NULL){
-//            Node* third = sec->next;
-//            sec->next = first;
-//            first->next = third;
-//            if (prev != NULL)
-//                prev->next = sec;
-//            else
-//                head = sec;
-//            prev = first;
-//            first = third;
-//            if (third != NULL)
-//                sec = third->next;
-//            else
-//                sec = NULL;
-//        }
-//
-//        Node* temp = head;
-//        return head;
-//    }
-//};
-
-int main()
-{
-//    List list;
-//    list.push_back(1);
-//    list.push_back(2);
-//    list.push_back(3);
-//    list.push_back(4);
-//    list.push_back(5);
-////    list.pop_front();
-////    list.pop_back();
-//    list.insert(9,2);
-//    list.print();
-////    cout << list.reverse()->val << endl;
-////    cout << list.search(3) << endl;
-//
-//    cout << list.swap_pairs()->val << endl;
-//    list.print();
-
-// Struct
-
-    LinkedList l1;
-    push_front(l1, 1);
-    push_front(l1, 2);
-    push_back(l1, 3);
-    push_front(l1, 1);
-    push_front(l1, 2);
-    push_back(l1, 8);
-    insert(l1, 7, 3);
-    removeElement(l1, 7);
-//    pop_front(l1);
-//    pop_back(l1);
-    print_list(l1);
-    swap_pairs(l1);
-    print_list(l1);
-
-
+int main(){
+    LinkedList l;
+    push_back(l, 1);
+    push_back(l, 2);
+    push_back(l, 3);
+    push_back(l, 3);
+    push_back(l, 7);
+    push_back(l, 1);
+//    pop_back(l);
+//    pop_front(l);
+//    insert(l, 3, 8);
+//    deletee(l, 6);
+//    recursiveReverse(l, l.head, NULL);
+//    cout << findMid(l) << endl;
+    print(l);
+//    cout << valueFromEnd(l, 4) << endl;
+//    deleteFromEnd(l, 4);
+//    print(l);
+//    cout << isPalindrome(l) << endl;
+    swapNodes(l);
+    print(l);
     return 0;
 }
