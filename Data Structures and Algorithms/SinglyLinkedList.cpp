@@ -41,8 +41,6 @@ public:
 			tail->next = newNode;
 			tail = newNode;
 		}
-
-
 	}
 
 	void pop_front(){
@@ -166,7 +164,7 @@ public:
 			return NULL;
 		} else {
 			slow = head;
-			Node* prev;
+			Node* prev = NULL;
 			while (slow != fast){ // Finding the starting point of the cycle in the linked list where cycle starts
 				slow = slow->next;
 				prev = fast;
