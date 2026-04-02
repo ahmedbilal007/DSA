@@ -80,6 +80,7 @@ void insert(DLinkedList& l, int val, int pos){
 	}
 	newNode->next = temp->next;
 	newNode->prev = temp;
+	newNode->next->prev = newNode;
 	temp->next = newNode;
 }
 
