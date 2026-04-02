@@ -161,7 +161,7 @@ string infixToPrefix(string exp, Stack s){
 int main(){
 	Stack s;
 	cout << "Converting an infix into postfix expression.\n";
-	cout << infixToPostFix("(A+B)-C*(R-M)/T^F", s);
+	cout << infixToPostFix("A^B^C", s);
 	cout << "\nConverting an infix into prefix expression.\n";
 	cout << infixToPrefix("(A+B)-C*(R-M)/T^F", s);
 	return 0;

@@ -1,9 +1,11 @@
+
 #include <iostream>
 using namespace std;
 
 struct Node{
     int data;
-    Node* next;
+    Node* next = NULL;
+    Node* prev = NULL;
 };
 
 struct LinkedList{
