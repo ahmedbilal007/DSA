@@ -56,6 +56,24 @@ public:
         }
         cout << endl;
     }
+
+    void dfsHelper(int u, vector<bool>& visited){
+        cout << u << " ";
+        visited[u] = true;
+
+        for (int v : arr[u]){
+            if (!visited[v]){
+                dfsHelper(v, visited);
+            }
+        }
+    }
+
+    void dfs(){
+        int src = 0;
+        vector<bool> visited(vertices, false);
+        dfsHelper(src, visited);
+        cout << endl;
+    }
 };
 
 int main()
@@ -64,11 +82,12 @@ int main()
     g.addEdge(0, 1);
     g.addEdge(1, 2);
     g.addEdge(1, 3);
-    g.addEdge(2, 3);
+    // g.addEdge(2, 3);
     g.addEdge(2, 4);
 
     g.printAdjacency();
     g.bfs();
+    g.dfs();
 
     return 0;
 }
